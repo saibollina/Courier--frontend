@@ -18,7 +18,7 @@ if (process.env.NODE_ENV !== "test") {
 }
 
 let corsOptions = {
-  origin: "http://localhost:8081",
+  origin: "*",
 };
 app.use(cors(corsOptions));
 app.options("*", cors());
