@@ -14,7 +14,7 @@ export const Place = (sequelize, Sequelize) => {
       allowNull: false,
     },
     rating:{
-      type: Sequelize.INTEGER,
+      type: Sequelize.INTEGER, 
       allowNull: true,
       default: 0,
     },
