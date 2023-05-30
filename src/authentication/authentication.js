@@ -8,7 +8,7 @@ const User = db.user;
  * Gets the authentication for this request. Throws an error if there is an authentcation problem.
  * If require is false, makes authentication optional.
  * If require is a string, enforces a specific type of authentication (credentials or token).
- * @return {{type: string, userId: string}}
+ * @return {{type: string, userId: string}} 
  */
 export const authenticate = async (req, res, require = true) => {
   let auth = req.get("authorization");
