@@ -26,7 +26,7 @@ app.options("*", cors());
 app.use(healthRouter);
 app.use(placeRouter);
 app.use(planRouter);
-app.use(authRouter);
+app.use(authRouter); 
 app.use(userRouter);
 
 
