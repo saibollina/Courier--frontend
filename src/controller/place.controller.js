@@ -24,7 +24,7 @@ export const createPlace = (req, res) =>{
     throw error;
   }
 
-  const place = {
+  const place = { 
     name: req.body.name,
     description: req.body.description,
     rating: req.body.rating,
