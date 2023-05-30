@@ -1,7 +1,7 @@
-const db_host = process.env.DB_HOST || "127.0.0.1";
-const db_pw = process.env.DB_PW || "";
-const db_user = process.env.DB_USER || "root";
-const db_name = process.env.DB_NAME|| "itenary";
+const db_host = process.env.DB_HOST || "localhost";
+const db_pw = process.env.DB_PW || "bollina@123";
+const db_user = process.env.DB_USER || "meghana";
+const db_name = process.env.DB_NAME|| "travel_itenarary";
 
 export const HOST = db_host;
 export const USER = db_user;
