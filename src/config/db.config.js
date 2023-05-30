@@ -7,7 +7,7 @@ export const HOST = db_host;
 export const USER = db_user;
 export const PASSWORD = db_pw;
 export const DB = db_name;
-export const dialect = "mysql";
+export const dialect = "mysql"; 
 export const pool = {
   max: 5,
   min: 0,
