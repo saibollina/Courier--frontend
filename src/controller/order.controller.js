@@ -16,7 +16,7 @@ export const createOrder = (req, res) =>{
     }
 
   const order = {
-    userId: req.body.user_id,
+    userId: req.body.user_id, 
     planId: req.body.plan_id,
   };
 
