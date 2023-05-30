@@ -5,7 +5,7 @@ export const saltSize = 16;
 export const keySize = 64;
 export const ivSize = 16;
 export const tagSize = 16;
-export const scryptOptions = {
+export const scryptOptions = { 
   N: 16384,
   r: 8,
   p: 1,
