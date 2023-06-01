@@ -85,6 +85,8 @@ export const getAllplans = (req, res) => {
     whereCondition[Op.and].push(searchCondition);
   }
 
+  res.send({ condition: whereCondition })
+
   Plan.findAll({
     where: whereCondition,
   })
