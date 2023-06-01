@@ -50,39 +50,54 @@ export const createPlan = (req, res) =>{
 
 }
 
-export const getAllplans = (req, res) =>{
+export const getAllplans = (req, res) => {
   const { from, to, startDate, endDate, search } = req.query;
-  const whereCondition = {};
-  if (from) {
-    whereCondition.from_place = { [Op.like]: `%${from}%` };
-  }
-  if (to) {
-    whereCondition.to_place = { [Op.like]: `%${to}%` };
-  }
-  if (startDate) {
-    whereCondition.starts_on = { [Op.like]: `%${startDate}%` };
-  }
-  if (endDate) {
-    whereCondition.ends_on = { [Op.like]: `%${endDate}%` };
-  }
-  if (search) {
-    whereCondition.name = { [Op.like]: `%${search}%` };
-    whereCondition.from_place = { [Op.like]: `%${search}%` };
-    whereCondition.to_place = { [Op.like]: `%${search}%` };
 
+  const whereCondition = {
+    [Op.and]: [],
+  };
+
+  if (from) {
+    whereCondition[Op.and].push({ from_place: { [Op.iLike]: `%${from}%` } });
   }
+
+  if (to) {
+    whereCondition[Op.and].push({ to_place: { [Op.iLike]: `%${to}%` } });
+  }
+
+  if (startDate) {
+    whereCondition[Op.and].push({ starts_on: { [Op.like]: `%${startDate}%` } });
+  }
+
+  if (endDate) {
+    whereCondition[Op.and].push({ ends_on: { [Op.like]: `%${endDate}%` } });
+  }
+
+  if (search) {
+    const searchCondition = {
+      [Op.or]: [
+        { name: { [Op.iLike]: `%${search}%` } },
+        { from_place: { [Op.iLike]: `%${search}%` } },
+        { to_place: { [Op.iLike]: `%${search}%` } },
+        { description: { [Op.iLike]: `%${search}%` }}
+      ],
+    };
+    whereCondition[Op.and].push(searchCondition);
+  }
+
   Plan.findAll({
     where: whereCondition,
-  }).then((data) => {
-          res.send(data);
-      })
-      .catch((err) => {
-        res.status(500).send({
-          message:
-            err.message || "Error retrieving plans"
-        });
+  })
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "Error retrieving plans",
       });
-}
+    });
+};
+
 
 export const getplan = (req, res) =>{
     const id = req.params.planId;
