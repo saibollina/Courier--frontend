@@ -2,7 +2,7 @@ import db from "../models/index.js";
 
 const Plan = db.plan;
 const Op = db.Sequelize.Op;
-
+const sequelize = db.sequelize;
 export const createPlan = (req, res) =>{
 
   // Validate request
@@ -66,11 +66,11 @@ export const getAllplans = (req, res) => {
   }
 
   if (startDate) {
-    whereCondition[Op.and].push({ starts_on: { [Op.like]: `%${startDate}%` } });
+    whereCondition[Op.and].push({ starts_on: sequelize.where(sequelize.fn('DATE', sequelize.col('starts_on')), startDate) });
   }
 
   if (endDate) {
-    whereCondition[Op.and].push({ ends_on: { [Op.like]: `%${endDate}%` } });
+    whereCondition[Op.and].push({ ends_on: sequelize.where(sequelize.fn('DATE', sequelize.col('ends_on')), endDate) });
   }
 
   if (search) {
@@ -85,7 +85,7 @@ export const getAllplans = (req, res) => {
     whereCondition[Op.and].push(searchCondition);
   }
 
-  res.send({ condition: whereCondition })
+  console.log("where",JSON.stringify(whereCondition))
 
   Plan.findAll({
     where: whereCondition,
