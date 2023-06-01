@@ -58,11 +58,11 @@ export const getAllplans = (req, res) => {
   };
 
   if (from) {
-    whereCondition[Op.and].push({ from_place: { [Op.iLike]: `%${from}%` } });
+    whereCondition[Op.and].push({ from_place: { [Op.like]: `%${from}%` } });
   }
 
   if (to) {
-    whereCondition[Op.and].push({ to_place: { [Op.iLike]: `%${to}%` } });
+    whereCondition[Op.and].push({ to_place: { [Op.like]: `%${to}%` } });
   }
 
   if (startDate) {
@@ -76,10 +76,10 @@ export const getAllplans = (req, res) => {
   if (search) {
     const searchCondition = {
       [Op.or]: [
-        { name: { [Op.iLike]: `%${search}%` } },
-        { from_place: { [Op.iLike]: `%${search}%` } },
-        { to_place: { [Op.iLike]: `%${search}%` } },
-        { description: { [Op.iLike]: `%${search}%` }}
+        { name: { [Op.like]: `%${search}%` } },
+        { from_place: { [Op.like]: `%${search}%` } },
+        { to_place: { [Op.like]: `%${search}%` } },
+        { description: { [Op.like]: `%${search}%` }}
       ],
     };
     whereCondition[Op.and].push(searchCondition);
