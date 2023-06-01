@@ -51,7 +51,29 @@ export const createPlan = (req, res) =>{
 }
 
 export const getAllplans = (req, res) =>{
-    Plan.findAll().then((data) => {
+  const { from, to, startDate, endDate, search } = req.query;
+  const whereCondition = {};
+  if (from) {
+    whereCondition.from_place = { [Op.like]: `%${from}%` };
+  }
+  if (to) {
+    whereCondition.to_place = { [Op.like]: `%${to}%` };
+  }
+  if (startDate) {
+    whereCondition.starts_on = { [Op.like]: `%${startDate}%` };
+  }
+  if (endDate) {
+    whereCondition.ends_on = { [Op.like]: `%${endDate}%` };
+  }
+  if (search) {
+    whereCondition.name = { [Op.like]: `%${search}%` };
+    whereCondition.from_place = { [Op.like]: `%${search}%` };
+    whereCondition.to_place = { [Op.like]: `%${search}%` };
+
+  }
+  Plan.findAll({
+    where: whereCondition,
+  }).then((data) => {
           res.send(data);
       })
       .catch((err) => {
