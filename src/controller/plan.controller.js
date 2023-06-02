@@ -102,7 +102,7 @@ export const getAllplans = (req, res) => {
 
 export const getplan = (req, res) =>{
     const id = req.params.planId;
-    Plan.findByPk(id,{ include: [Day] }).then((data) => {
+    Plan.findByPk(id,{ include: [{ model: Day, as: 'day' }] }).then((data) => {
           res.send(data);
       })
       .catch((err) => {
