@@ -5,7 +5,7 @@ import { Plan } from './plan.model.js';
 import { User } from './user.model.js';
 import { Session } from './session.model.js';
 import { Order } from './order.model.js';
-import { Day } from './order.model.js';
+import { Day } from './day.model.js';
 
 const sequelize = new Sequelize(DB, USER, PASSWORD, {
   host: HOST,
@@ -51,11 +51,6 @@ db.plan.hasMany(
   { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
 );
 
-db.plan.hasMany(
-  db.day,
-  { as: "day" },
-  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
-);
 
 // foreign key for booking
 db.user.hasMany(

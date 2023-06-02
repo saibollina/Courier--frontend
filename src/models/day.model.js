@@ -1,6 +1,6 @@
 
-module.exports = (sequelize, Sequelize) => {
-    const Day = sequelize.define('Day', {
+export const Day = (sequelize, Sequelize) => {
+    const Day = sequelize.define('day', {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -18,4 +18,4 @@ module.exports = (sequelize, Sequelize) => {
         timestamps: true,
       });
       return Day;
-    }
+}
