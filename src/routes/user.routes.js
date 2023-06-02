@@ -10,4 +10,4 @@ userRouter.get('/users/:id',  findOne);
 userRouter.post('/users',[bodyParser.urlencoded({ extended: false }),bodyParser.json()],create)
 userRouter.delete("/users/:id", deleteUser);
 userRouter.delete("/users/", deleteAll);
-userRouter.put("/users/id", update);
+userRouter.put("/users/:id", update);

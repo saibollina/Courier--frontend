@@ -5,6 +5,7 @@ import { Plan } from './plan.model.js';
 import { User } from './user.model.js';
 import { Session } from './session.model.js';
 import { Order } from './order.model.js';
+import { Day } from './order.model.js';
 
 const sequelize = new Sequelize(DB, USER, PASSWORD, {
   host: HOST,
@@ -28,12 +29,31 @@ db.plan = Plan(sequelize,Sequelize);
 db.user = User(sequelize,Sequelize);
 db.session = Session(sequelize,Sequelize);
 db.order = Order(sequelize,Sequelize);
+db.day = Day(sequelize,Sequelize);
 
 
 // foreign key for place
 db.plan.hasMany(
   db.place,
   { as: "place" },
+  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
+);
+
+//foreign key for day
+db.place.hasMany(
+  db.day,
+  { as: "day" },
+  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
+);
+db.plan.hasMany(
+  db.day,
+  { as: "day" },
+  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
+);
+
+db.plan.hasMany(
+  db.day,
+  { as: "day" },
   { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
 );
 

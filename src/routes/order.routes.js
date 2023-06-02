@@ -10,4 +10,4 @@ orderRouter.get('/orders/:orderId', getOrder);
 orderRouter.post('/order',[bodyParser.urlencoded({ extended: false }),bodyParser.json()],createOrder)
 orderRouter.delete("/orders/:id", deleteOrder);
 orderRouter.delete("/orders/", deleteAllOrders);
-orderRouter.put("/orders/id", updateOrder);
+orderRouter.put("/orders/:id", updateOrder);
