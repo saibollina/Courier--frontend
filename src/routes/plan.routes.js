@@ -10,4 +10,4 @@ planRouter.get('/plans/:placeId', getplan);
 planRouter.post('/place',[bodyParser.urlencoded({ extended: false }),bodyParser.json()],createPlan)
 planRouter.delete("/plans/:id", deletePlan);
 planRouter.delete("/plans/", deleteAllPlans);
-planRouter.put("/plans/id", updatePlan);
+planRouter.put("/plans/:id", updatePlan);

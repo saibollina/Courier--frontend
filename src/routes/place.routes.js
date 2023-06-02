@@ -12,4 +12,4 @@ placeRouter.get('/places/:placeId', getPlace);
 placeRouter.post('/place',[bodyParser.urlencoded({ extended: false }),bodyParser.json()],createPlace)
 placeRouter.delete("/places/:id", deletePlace);
 placeRouter.delete("/places/", deleteAllPlaces);
-placeRouter.put("/places/id", updatePlace); 
+placeRouter.put("/places/:id", updatePlace); 

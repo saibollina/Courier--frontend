@@ -3,6 +3,8 @@ import db from "../models/index.js";
 const Plan = db.plan;
 const Op = db.Sequelize.Op;
 const sequelize = db.sequelize;
+const Day = db.day;
+
 export const createPlan = (req, res) =>{
 
   // Validate request
@@ -84,9 +86,6 @@ export const getAllplans = (req, res) => {
     };
     whereCondition[Op.and].push(searchCondition);
   }
-
-  console.log("where",JSON.stringify(whereCondition))
-
   Plan.findAll({
     where: whereCondition,
   })
@@ -103,7 +102,7 @@ export const getAllplans = (req, res) => {
 
 export const getplan = (req, res) =>{
     const id = req.params.planId;
-    Plan.findByPk(id).then((data) => {
+    Plan.findByPk(id,{ include: [Day] }).then((data) => {
           res.send(data);
       })
       .catch((err) => {
