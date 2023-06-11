@@ -20,6 +20,11 @@ export const User = (sequelize, Sequelize) => {
       type: Sequelize.BLOB,
       allowNull: false,
     },
+    role:{
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      default: 0
+    }
   });
 
   return User;
