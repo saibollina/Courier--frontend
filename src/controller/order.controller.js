@@ -155,7 +155,10 @@ export const getUserOrders = (req,res) => {
     const id = req.params.id;
     Order.findAll({
       where: { userId: id },
-      include: { model: Plan, as: 'plan' },
+      include: {
+        model: Plan,
+        where: { id: Sequelize.col('orders.planId') },
+      },
     })
       .then((data) => {
         res.send(data);
