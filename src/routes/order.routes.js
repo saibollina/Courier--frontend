@@ -1,6 +1,6 @@
 import { Router} from 'express';
 import bodyParser from 'body-parser';
-import { createOrder, getAllOrders, getOrder, updateOrder,searchOrder, deleteAllOrders,deleteOrder } from '../controller/order.controller.js';
+import { createOrder, getAllOrders, getOrder, updateOrder,searchOrder, deleteAllOrders,deleteOrder, getUserOrders } from '../controller/order.controller.js';
 
 export const orderRouter = Router();
 
