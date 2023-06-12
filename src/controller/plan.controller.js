@@ -120,8 +120,20 @@ export const getplan = (req, res) =>{
 // Update a plan by the id in the request
 export const updatePlan = (req, res) => {
     const id = req.params.id;
+
+    const body = {
+      name: req.body.name,
+      description: req.body.description,
+      image: req.body.image,
+      starts_on: req.body.starts_on,
+      ends_on: req.body.ends_on,
+      rating: req.body.rating || 4,
+      from_place: req.body.from_place,
+      to_place: req.body.to_place,
+      cost: req.body.cost
+    };
   
-    Plan.update(req.body, {
+    Plan.update(body, {
       where: { id: id },
     })
       .then((data) => {
