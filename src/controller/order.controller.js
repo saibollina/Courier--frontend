@@ -157,7 +157,7 @@ export const getUserOrders = (req,res) => {
       where: { userId: id },
       include: {
         model: Plan,
-        where: { id: Sequelize.col('Order.planId') },
+        where: { id: Sequelize.col('orders.planId') },
       },
     })
       .then((data) => {
