@@ -48,7 +48,7 @@ export const create = async (req, res) => {
           email: req.body.email,
           password: hash,
           salt: salt,
-          role: user.role || 0
+          role: req.body.role || 0
         };
 
         // Save User in the database
