@@ -36,7 +36,11 @@ export const createPlan = (req, res) =>{
     image: req.body.image,
     starts_on: req.body.starts_on,
     ends_on: req.body.ends_on,
-    rating: req.body.rating,
+    rating: req.body.rating || 4,
+    from_place: req.body.from_place,
+    to_place: req.body.to_place,
+    cost: req.body.cost
+    
   };
 
   Plan.create(plan)

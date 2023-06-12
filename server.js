@@ -6,6 +6,7 @@ import { placeRouter } from './src/routes/place.routes.js';
 import { planRouter } from './src/routes/plan.routes.js';
 import { authRouter } from './src/routes/auth.routes.js';
 import { userRouter } from './src/routes/user.routes.js';
+import { orderRouter } from './src/routes/order.routes.js';
 
 db.sequelize.sync();
 const app = express();
@@ -28,6 +29,7 @@ app.use(placeRouter);
 app.use(planRouter);
 app.use(authRouter); 
 app.use(userRouter);
+app.use(orderRouter);
 
 
 
