@@ -9,7 +9,6 @@ import { userRouter } from './src/routes/user.routes.js';
 import { orderRouter } from './src/routes/order.routes.js';
 
 db.sequelize.sync();
-const bodyParser = require('body-parser');
 const app = express();
 
 const PORT = process.env.PORT || 3200;
@@ -19,8 +18,11 @@ if (process.env.NODE_ENV !== "test") {
   });
 }
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// Middleware for parsing JSON bodies
+app.use(express.json());
+
+// Middleware for parsing URL-encoded bodies
+app.use(express.urlencoded({ extended: true }));
 
 let corsOptions = {
   origin: "*",
