@@ -6,8 +6,9 @@ export const orderRouter = Router();
 
 orderRouter.get('/orders', getAllOrders);
 orderRouter.get("/orders/search", searchOrder);
+orderRouter.get('/orders/user/:id', getUserOrders);
 orderRouter.get('/orders/:orderId', getOrder);
-orderRouter.post('/order',[bodyParser.urlencoded({ extended: false }),bodyParser.json()],createOrder)
+orderRouter.post('/orders',[bodyParser.urlencoded({ extended: false }),bodyParser.json()],createOrder)
 orderRouter.delete("/orders/:id", deleteOrder);
 orderRouter.delete("/orders/", deleteAllOrders);
 orderRouter.put("/orders/:id", updateOrder);
