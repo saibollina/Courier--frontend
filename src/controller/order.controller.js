@@ -1,9 +1,7 @@
 import db from "../models/index.js";
 
 const Order = db.order;
-const Plan = db.plan;
 const Op = db.Sequelize.Op;
-const Sequelize = db.Sequelize;
 
 export const createOrder = (req, res) =>{
     // Validate request
@@ -155,11 +153,7 @@ export const searchOrder = (req, res) => {
 export const getUserOrders = (req,res) => {
     const id = req.params.id;
     Order.findAll({
-      where: { userId: id },
-      include: {
-        model: Plan,
-        where: { id: Sequelize.col('orders.planId') },
-      },
+      where: { userId: id }
     })
       .then((data) => {
         res.send(data);
