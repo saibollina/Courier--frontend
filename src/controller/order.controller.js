@@ -3,6 +3,7 @@ import db from "../models/index.js";
 const Order = db.order;
 const Plan = db.plan;
 const Op = db.Sequelize.Op;
+const Sequelize = db.Sequelize;
 
 export const createOrder = (req, res) =>{
     // Validate request
