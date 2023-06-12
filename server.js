@@ -9,6 +9,7 @@ import { userRouter } from './src/routes/user.routes.js';
 import { orderRouter } from './src/routes/order.routes.js';
 
 db.sequelize.sync();
+const bodyParser = require('body-parser');
 const app = express();
 
 const PORT = process.env.PORT || 3200;
@@ -17,6 +18,9 @@ if (process.env.NODE_ENV !== "test") {
     console.log(`Server is running on port ${PORT}.`);
   });
 }
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 let corsOptions = {
   origin: "*",
