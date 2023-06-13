@@ -82,10 +82,7 @@ export const getAllplans = (req, res) => {
   if (search) {
     const searchCondition = {
       [Op.or]: [
-        { name: { [Op.like]: `%${search}%` } },
-        { from_place: { [Op.like]: `%${search}%` } },
-        { to_place: { [Op.like]: `%${search}%` } },
-        { description: { [Op.like]: `%${search}%` }}
+        { name: { [Op.like]: `%${search}%` } }
       ],
     };
     whereCondition[Op.and].push(searchCondition);
