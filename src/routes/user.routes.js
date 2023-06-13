@@ -7,7 +7,7 @@ export const userRouter = Router();
 
 userRouter.get('/users', findAll);
 userRouter.get('/users/:id',  findOne);
-userRouter.post('/users',[bodyParser.urlencoded({ extended: false }),bodyParser.json()],create)
+userRouter.post('/users',create)
 userRouter.delete("/users/:id", deleteUser);
 userRouter.delete("/users/", deleteAll);
 userRouter.put("/users/:id", update);
