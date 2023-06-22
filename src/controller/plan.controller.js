@@ -5,7 +5,7 @@ const Op = db.Sequelize.Op;
 const sequelize = db.sequelize;
 const Day = db.day;
 
-export const createPlan = (req, res) =>{
+export const createPlan = (req, res) =>{mr
 
   // Validate request
   if (req.body.name === undefined) {
