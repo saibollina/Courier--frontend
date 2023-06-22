@@ -9,7 +9,7 @@ export const createPlan = (req, res) =>{
 
   // Validate request
   if (req.body.name === undefined) {
-    const error = new Error("name cannot be empty for itenarary!");
+    const error = new Error("name cannot be empty for i  tenarary!");
     error.statusCode = 400;
     throw error;
   } else if (req.body.description === undefined) {
