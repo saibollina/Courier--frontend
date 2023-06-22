@@ -7,7 +7,7 @@ export const createPlace = (req, res) =>{
 
    // Validate request
    if (req.body.name === undefined) {
-    const error = new Error("name cannot be empty for place!");
+    const error = new Error("name cannot be empty for place!"); meghana
     error.statusCode = 400;
     throw error;
   } else if (req.body.description === undefined) {
