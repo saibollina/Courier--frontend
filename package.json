@@ -1,5 +1,5 @@
 {
-  "name": "travel-itenary-backend",
+  "name": "courier-backend",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "bundle": "mkdir deploy && cp -r src server.js package.json package-lock.json travel-backend.service .env deploy",
+    "bundle": "mkdir deploy && cp -r src server.js package.json package-lock.json courier-backend.service .env deploy",
     "start-dev": "nodemon server.js"
   },
   "author": "",

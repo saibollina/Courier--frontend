@@ -23,46 +23,8 @@ const sequelize = new Sequelize(DB, USER, PASSWORD, {
 const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
-
-db.place = Place(sequelize,Sequelize);
-db.plan = Plan(sequelize,Sequelize);
 db.user = User(sequelize,Sequelize);
 db.session = Session(sequelize,Sequelize);
-db.order = Order(sequelize,Sequelize);
-db.day = Day(sequelize,Sequelize);
-
-
-// foreign key for place
-db.plan.hasMany(
-  db.place,
-  { as: "place" },
-  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
-);
-
-//foreign key for day
-db.place.hasMany(
-  db.day,
-  { as: "day" },
-  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
-);
-db.plan.hasMany(
-  db.day,
-  { as: "day" },
-  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
-);
-
-
-// foreign key for booking
-db.user.hasMany(
-  db.order,
-  { as: "order" },
-  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
-);
-db.plan.hasMany(
-  db.order,
-  { as: "order" },
-  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
-);
 
 // foreign key for session
 db.user.hasMany(
