@@ -1,11 +1,7 @@
 import { DB, USER, PASSWORD, HOST, dialect as _dialect, pool as _pool } from "../config/db.config.js";
 import Sequelize from "sequelize";
-import { Place } from './place.model.js';
-import { Plan } from './plan.model.js';
 import { User } from './user.model.js';
 import { Session } from './session.model.js';
-import { Order } from './order.model.js';
-import { Day } from './day.model.js';
 
 const sequelize = new Sequelize(DB, USER, PASSWORD, {
   host: HOST,
