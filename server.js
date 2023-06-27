@@ -4,6 +4,7 @@ import { healthRouter } from './src/routes/health.routes.js';
 import db from './src/models/index.js';
 import { authRouter } from './src/routes/auth.routes.js';
 import { userRouter } from './src/routes/user.routes.js';
+import { orderRouter } from './src/routes/order.routes.js';
 
 db.sequelize.sync();
 const app = express();
@@ -30,6 +31,4 @@ app.options("*", cors());
 app.use(healthRouter);
 app.use(authRouter); 
 app.use(userRouter);
-
-
-
+app.use(orderRouter)
