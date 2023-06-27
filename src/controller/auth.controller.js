@@ -1,6 +1,6 @@
 import db from "../models/index.js";
 import { authenticate } from "../authentication/authentication.js";
-import { encrypt } from "../authentication/crypto.js";
+import { encrypt, decrypt } from "../authentication/crypto.js";
 
 const User = db.user;
 const Session = db.session;
@@ -50,10 +50,12 @@ export const logout = async (req, res) => {
     let token = auth.slice(7);
     let sessionId = await decrypt(token);
     if (sessionId == null) return;
-    return await Session.destroy({ where: { id: sessionId } }).catch(
+    await Session.destroy({ where: { id: sessionId } }).catch(
       (error) => {
         console.log(error);
       }
     );
+    res.status= 200
+    res.send({message: 'OK'});
   }
 };
