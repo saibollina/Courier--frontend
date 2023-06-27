@@ -2,6 +2,8 @@ import { DB, USER, PASSWORD, HOST, dialect as _dialect, pool as _pool } from "..
 import Sequelize from "sequelize";
 import { User } from './user.model.js';
 import { Session } from './session.model.js';
+import { Order } from './order.model.js';
+import { OrderDetail } from './orderDetail.model.js';
 
 const sequelize = new Sequelize(DB, USER, PASSWORD, {
   host: HOST,
@@ -21,6 +23,9 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 db.user = User(sequelize,Sequelize);
 db.session = Session(sequelize,Sequelize);
+db.order  = Order(sequelize, Sequelize);
+db.orderDetails = OrderDetail(sequelize, Sequelize);
+
 
 // foreign key for session
 db.user.hasMany(
@@ -31,8 +36,26 @@ db.user.hasMany(
 db.session.belongsTo(
   db.user,
   { as: "user" },
-  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
+  { foreignKey: { allowNull: false } }
 );
 
+db.user.hasMany(db.order,{
+    as: 'ordersPlaced',
+    foreignKey: 'coustomerID'
+});
 
+db.user.hasMany(db.order,{
+  as: 'ordersMade',
+  foreignKey: 'orderedBy'
+});
+
+db.order.belongsTo(db.user, {
+  foreignKey: 'coustomerID',
+  as: 'orderedByCustomer',
+});
+
+db.order.belongsTo(db.user, {
+  foreignKey: 'orderedBy',
+  as: 'orderedByClerk',
+});
 export default db;
