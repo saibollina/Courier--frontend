@@ -3,7 +3,6 @@ import Sequelize from "sequelize";
 import { User } from './user.model.js';
 import { Session } from './session.model.js';
 import { Order } from './order.model.js';
-import { OrderDetail } from './orderDetail.model.js';
 
 const sequelize = new Sequelize(DB, USER, PASSWORD, {
   host: HOST,
@@ -24,7 +23,6 @@ db.sequelize = sequelize;
 db.user = User(sequelize,Sequelize);
 db.session = Session(sequelize,Sequelize);
 db.order  = Order(sequelize, Sequelize);
-db.orderDetails = OrderDetail(sequelize, Sequelize);
 
 
 // foreign key for session
@@ -47,6 +45,11 @@ db.user.hasMany(db.order,{
 db.user.hasMany(db.order,{
   as: 'ordersMade',
   foreignKey: 'orderedBy'
+});
+
+db.user.hasMany(db.order,{
+  as: 'deliveryBy',
+  foreignKey: 'pickedUpBy'
 });
 
 db.order.belongsTo(db.user, {
