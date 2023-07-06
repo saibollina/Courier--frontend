@@ -1,4 +1,5 @@
 import db from "../models/index.js";
+import Sequelize from "sequelize";
 import { encrypt, getSalt, hashPassword } from "../authentication/crypto.js";
 const User = db.user;
 const Session = db.session;
@@ -94,10 +95,14 @@ export const create = async (req, res) => {
 
 // Retrieve all Users from the database.
 export const findAll = (req, res) => {
-  const id = req.query.id;
-  var condition = id ? { id: { [Op.like]: `%${id}%` } } : null;
+  const roleId = req.query.userRole
+  // const id = req.query.id;
+  var condition = roleId ? { role: roleId } : null;
 
-  User.findAll({ where: condition })
+  User.findAll({
+    attributes: ['email', 'firstName','lastName','role','id',
+    [Sequelize.fn("concat", Sequelize.col("firstname"),' ',Sequelize.col("lastname")),'name']], 
+    where: condition })
     .then((data) => {
       res.send(data);
     })
@@ -112,7 +117,9 @@ export const findAll = (req, res) => {
 export const findOne = (req, res) => {
   const id = req.params.id;
 
-  User.findByPk(id)
+  User.findByPk(id,{
+    attributes: ['email', 'firstName','lastName','role','id']
+  })
     .then((data) => {
       if (data) {
         res.send(data);
@@ -134,6 +141,7 @@ export const findByEmail = (req, res) => {
   const email = req.params.email;
 
   User.findOne({
+    attributes: ['email', 'firstName','lastName','role','id'],
     where: {
       email: email,
     },
@@ -142,10 +150,10 @@ export const findByEmail = (req, res) => {
       if (data) {
         res.send(data);
       } else {
-        res.send({ email: "not found" });
-        /*res.status(404).send({
+        // res.send({ email: "not found" });
+        res.status(404).send({
           message: `Cannot find User with email=${email}.`
-        });*/
+        });
       }
     })
     .catch((err) => {
@@ -168,7 +176,7 @@ export const update = (req, res) => {
           message: "User was updated successfully.",
         });
       } else {
-        res.send({
+        res.status(404).send({
           message: `Cannot update User with id = ${id}. Maybe User was not found or req.body is empty!`,
         });
       }
