@@ -1,3 +1,4 @@
+import { error } from 'console';
 import crypto from "crypto"
 
 //encryption/hashing settings
@@ -66,7 +67,8 @@ export const decrypt = async (token) => {
     let str =
       decipher.update(encrypted, "binary", "utf8") + decipher.final("utf8");
     return JSON.parse(str);
-  } catch {
+  } catch(error) {
+    console.log('error', error)
     throw new Error({
       code: "invalid-auth",
       message: "Invalid authentication",
