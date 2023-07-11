@@ -48,7 +48,8 @@ export const logout = async (req, res) => {
     (typeof require !== "string" || require === "token")
   ) {
     let token = auth.slice(7);
-    let sessionId = await decrypt(token);
+    try{
+      let sessionId = await decrypt(token);
     if (sessionId == null) return;
     await Session.destroy({ where: { id: sessionId } }).catch(
       (error) => {
@@ -57,5 +58,11 @@ export const logout = async (req, res) => {
     );
     res.status= 200
     res.send({message: 'OK'});
+    }catch(error){
+      console.log(error);
+      res.status = 200;
+      res.send({message: 'OK'});
+    }
+    
   }
 };
