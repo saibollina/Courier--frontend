@@ -1,7 +1,7 @@
 import { Router} from 'express';
 
 
-import { create, findByEmail, findAll } from "../controller/customer.controller.js";
+import { create, findByEmail, findAll, findOne } from "../controller/customer.controller.js";
 
 export const customerRouter = Router();
 
