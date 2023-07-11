@@ -4,6 +4,7 @@ import { User } from './user.model.js';
 import { Session } from './session.model.js';
 import { Order } from './order.model.js';
 import { Customer } from './customer.model.js';
+import { Location } from './location.model.js';
 
 const sequelize = new Sequelize(DB, USER, PASSWORD, {
   host: HOST,
@@ -25,6 +26,7 @@ db.user = User(sequelize,Sequelize);
 db.session = Session(sequelize,Sequelize);
 db.order  = Order(sequelize, Sequelize);
 db.customer  = Customer(sequelize, Sequelize);
+db.location  = Location(sequelize, Sequelize);
 
 
 // foreign key for session
