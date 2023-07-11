@@ -3,6 +3,7 @@ import Sequelize from "sequelize";
 import { User } from './user.model.js';
 import { Session } from './session.model.js';
 import { Order } from './order.model.js';
+import { Customer } from './customer.model.js';
 
 const sequelize = new Sequelize(DB, USER, PASSWORD, {
   host: HOST,
@@ -23,6 +24,7 @@ db.sequelize = sequelize;
 db.user = User(sequelize,Sequelize);
 db.session = Session(sequelize,Sequelize);
 db.order  = Order(sequelize, Sequelize);
+db.customer  = Customer(sequelize, Sequelize);
 
 
 // foreign key for session
@@ -37,7 +39,7 @@ db.session.belongsTo(
   { foreignKey: { allowNull: false } }
 );
 
-db.user.hasMany(db.order,{
+db.customer.hasMany(db.order,{
     as: 'ordersPlaced',
     foreignKey: 'coustomerID'
 });
@@ -52,8 +54,8 @@ db.user.hasMany(db.order,{
   foreignKey: 'pickedUpBy'
 });
 
-db.order.belongsTo(db.user, {
-  foreignKey: 'coustomerID',
+db.order.belongsTo(db.customer, {
+  foreignKey: 'customerID',
   as: 'orderedByCustomer',
 });
 

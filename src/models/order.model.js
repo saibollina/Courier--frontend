@@ -6,7 +6,7 @@ export const Order = (sequelize, Sequelize) => {
       primaryKey:true,
       autoIncrement: true,
     },
-    coustomerID: {
+    customerID: {
       type: Sequelize.INTEGER,
       allowNull: false,
     },
@@ -49,7 +49,27 @@ export const Order = (sequelize, Sequelize) => {
     estimatedDeliveryTime: {
       type: Sequelize.INTEGER,
       allowNull: true,
-    }
+    },
+    parcelName:{
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    receiverFirstName:{
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    receiverLastName:{
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    receiverPhoneNumber:{
+      type: Sequelize.STRING,
+      allowNull: false,
+      validate: {
+        notNull: { args: true, msg: "You must enter Phone Number" },
+        len: { args: [10,10], msg: 'Phone Number is invalid' },
+      }
+    },
   });
 
   return Order;

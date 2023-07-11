@@ -29,7 +29,16 @@ export const User = (sequelize, Sequelize) => {
     role:{
       type: Sequelize.INTEGER,
       allowNull: false,
-      default: 0
+      defaultValue: 0
+    },
+    isAvailable:{
+      type: Sequelize.BOOLEAN,
+      allowNull: false,
+      defaultValue: true
+    },
+    gender:{
+      type: Sequelize.STRING,
+      allowNull: false,
     }
   });
 
