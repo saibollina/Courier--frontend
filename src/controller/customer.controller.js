@@ -112,3 +112,18 @@ export const findAll = (req,res)=>{
         });
       });
   }
+
+  export const findOne = (req,res)=>{
+    const id = req.params.id
+    Customer.findByPk(id,{
+        attributes: ['email', 'firstName','lastName','role','id',
+    [Sequelize.fn("concat", Sequelize.col("firstname"),' ',Sequelize.col("lastname")),'name']]})
+      .then((data) => {
+        res.send(data);
+      })
+      .catch((err) => {
+        res.status(500).send({
+          message: err.message || "Some error occurred while retrieving orders.",
+        });
+      });
+  }

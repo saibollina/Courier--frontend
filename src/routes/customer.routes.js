@@ -9,3 +9,5 @@ export const customerRouter = Router();
 customerRouter.post('/customers',create)
 customerRouter.get('/customers/email/:email',  findByEmail);
 customerRouter.get('/customers',  findAll);
+customerRouter.get('/customers/:id',findOne)
+
