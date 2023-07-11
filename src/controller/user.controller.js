@@ -7,23 +7,41 @@ const Op = db.Sequelize.Op;
 
 // Create and Save a new User
 export const create = async (req, res) => {
+  console.log(req.body.firstName.length)
   // Validate request
-  if (req.body.firstName === undefined) {
-    const error = new Error("First name cannot be empty for user!");
-    error.statusCode = 400;
-    throw error;
-  } else if (req.body.lastName === undefined) {
-    const error = new Error("Last name cannot be empty for user!");
-    error.statusCode = 400;
-    throw error;
-  } else if (req.body.email === undefined) {
-    const error = new Error("Email cannot be empty for user!");
-    error.statusCode = 400;
-    throw error;
-  } else if (req.body.password === undefined) {
-    const error = new Error("Password cannot be empty for user!");
-    error.statusCode = 400;
-    throw error;
+  if (req.body.firstName === undefined || !req.body.firstName.length) {
+    return res.status(400).send({
+      message: "First name cannot be empty for user!",
+    });
+  }
+  if (req.body.lastName === undefined || !req.body.lastName.length) {
+    return res.status(400).send({
+      message: "Last name cannot be empty for user!",
+    });
+  }
+  if (req.body.email === undefined || !req.body.email.length) {
+   
+    return res.status(400).send({
+      message: "Email cannot be empty for user!",
+    });
+  }
+  if (req.body.password === undefined || !req.body.password.length) {
+    
+    return res.status(400).send({
+      message: "Password cannot be empty for user!",
+    });
+  }
+  if (req.body.gender === undefined || !req.body.gender.length) {
+   
+    return res.status(400).send({
+      message: "Gender cannot be empty for user!",
+    });
+  }
+  if (req.body.role === undefined || !req.body.role) {
+    
+    return res.status(400).send({
+      message: "role cannot be empty for user!",
+    });
   }
 
   // find by email
@@ -34,7 +52,9 @@ export const create = async (req, res) => {
   })
     .then(async (data) => {
       if (data) {
-        return "This email is already in use.";
+        return res.status(400).send({
+          message: "This email is already in use.",
+        });
       } else {
         console.log("email not found");
 
@@ -49,7 +69,8 @@ export const create = async (req, res) => {
           email: req.body.email,
           password: hash,
           salt: salt,
-          role: req.body.role || 0
+          role: req.body.role || 0,
+          gender: req.body.gender
         };
 
         // Save User in the database
@@ -229,3 +250,16 @@ export const deleteAll = (req, res) => {
       });
     });
 };
+
+export const getAllDeliveryPersons = (req,res)=>{
+
+  User.findAll({ where: { role: 2 , isAvailable: true} })
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "Some error occurred while retrieving orders.",
+      });
+    });
+}
