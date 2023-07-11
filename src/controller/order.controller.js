@@ -1,43 +1,69 @@
 import db from "../models/index.js";
-import {getEstimatedCost} from "../utils/deliveryCostEstimater.js"
+import {getEstimatedCost} from "../utils/deliveryCostEstimater.js";
+import Sequelize from "sequelize";
 const Order = db.order;
 const Op = db.Sequelize.Op;
 
 export const create = async (req, res) => {
-  if (req.body.coustomerID === undefined) {
+  console.log(req.body)
+  if (req.body.customerID === undefined || !req.body.customerID) {
     return res.status(400).send({
-      message: "coustomerID cannot be empty for order!",
+      message: "customerID cannot be empty for order!",
     });
     
   }
-  if (req.body.orderedBy === undefined) {
+  if (req.body.orderedBy === undefined || !req.body.orderedBy) {
     return res.status(400).send({
       message: "orderedBy cannot be empty for order!",
     });
   }
-  if (req.body.dropLocation === undefined) {
+  if (req.body.dropLocation === undefined || !req.body.dropLocation.length) {
     return res.status(400).send({
         message: "droplocation cannot be empty for order!",
       });
   }
-  if (req.body.pickupLocation === undefined) {
+  if (req.body.pickupLocation === undefined || !req.body.pickupLocation.length) {
     return res.status(400).send({
       message: "pickup location cannot be empty for order!",
     });
   }
-  if (req.body.cost === undefined) {
+  if (req.body.cost === undefined || !req.body.cost) {
     return res.status(400).send({
       message: "cost cannot be empty for order!",
     });
   }
+  if (req.body.receiverFirstName === undefined || !req.body.receiverFirstName.length) {
+    return res.status(400).send({
+      message: "Receiver firstname cannot be empty for order!",
+    });
+  }
+  if (req.body.receiverLastName === undefined || !req.body.receiverLastName.length) {
+    return res.status(400).send({
+      message: "Receiver lastname cannot be empty for order!",
+    });
+  }
+  if (req.body.receiverPhoneNumber === undefined || !req.body.receiverPhoneNumber.length || req.body.receiverPhoneNumber.length!=10) {
+    return res.status(400).send({
+      message: "Please check Receiver phone number",
+    });
+  }
+  if (req.body.parcelName === undefined) {
+    return res.status(400).send({
+      message: "parcelName cannot be empty for order!",
+    });
+  }
   const order = {
-    coustomerID:req.body.coustomerID,
+    customerID:req.body.customerID,
     orderedBy :req.body.orderedBy,
     orderPlacedTime: new Date(),
     cost: req.body.cost,
     pickupLocation:req.body.pickupLocation,
     dropLocation:req.body.dropLocation,
-    status:'Order-placed'
+    status:'Order-placed',
+    receiverFirstName: req.body.receiverFirstName,
+    receiverLastName: req.body.receiverLastName,
+    receiverPhoneNumber: req.body.receiverPhoneNumber,
+    parcelName: req.body.parcelName
   }
 
   await Order.create(order).then((data)=>{
@@ -55,7 +81,21 @@ export const findAll = (req, res) => {
   const id = req.query.id;
   var condition = id ? { id: { [Op.like]: `%${id}%` } } : null;
 
-  Order.findAll({ where: condition })
+  Order.findAll({
+    include: [
+      {
+        model: db.customer,
+        as: "orderedByCustomer",
+        attributes: [
+          [Sequelize.literal('CONCAT(`orderedByCustomer`.`firstName`, " ", `orderedByCustomer`.`lastName`)'), 'OrderedBy'],
+        ],
+      },
+    ],
+    attributes: [
+      'id',
+      'status',
+    ],
+    where: condition })
     .then((data) => {
       res.send(data);
     })
@@ -86,4 +126,19 @@ export const estimateDeliveryCost = (req, res) => {
   }
 
   res.send({cost: getEstimatedCost(pickupLocation, dropLocation)});
+}
+
+export const findAllOrdersAssignedToDP = (req,res) =>{
+  const id = req.params.deliveryPersonId;
+  var condition = id ? { pickedUpBy: id } : null;
+
+  Order.findAll({ where: condition })
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "Some error occurred while retrieving orders.",
+      });
+    });
 }
