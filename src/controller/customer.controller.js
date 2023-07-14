@@ -58,7 +58,9 @@ export const create = async (req, res) => {
           };
   
           // Save customer in the database
-          await Customer.create(customer)
+          await Customer.create(customer).then((data)=>{
+            return res.send(data);
+          })
             .catch((err) => {
               console.log(err);
               res.status(500).send({
@@ -68,7 +70,9 @@ export const create = async (req, res) => {
         }
       })
       .catch((err) => {
-        return err.message || "Error retrieving User with email=" + email;
+        return res.status(500).send({
+          message: err.message || "Error retrieving User with email=" + email,
+        });
       });
   };
 
@@ -113,17 +117,75 @@ export const findAll = (req,res)=>{
       });
   }
 
-  export const findOne = (req,res)=>{
-    const id = req.params.id
-    Customer.findByPk(id,{
-        attributes: ['email', 'firstName','lastName','role','id',
-    [Sequelize.fn("concat", Sequelize.col("firstname"),' ',Sequelize.col("lastname")),'name']]})
+  export const findOne = (req, res) => {
+    const id = req.params.id;
+  
+    Customer.findOne({
+      attributes: ['email', 'firstName','lastName','role','id'],
+      where: {
+        id: id,
+      },
+    })
       .then((data) => {
-        res.send(data);
+        if (data) {
+          res.send(data);
+        } else {
+          // res.send({ email: "not found" });
+          res.status(404).send({
+            message: `Cannot find User with id=${id}.`
+          });
+        }
       })
       .catch((err) => {
         res.status(500).send({
-          message: err.message || "Some error occurred while retrieving orders.",
+          message: err.message || "Error retrieving User with id=" + id,
         });
       });
-  }
+  };
+
+  export const deleteCustomer = (req, res) => {
+    const id = req.params.id;
+  
+    Customer.destroy({
+      where: { id: id },
+    })
+      .then((number) => {
+        if (number == 1) {
+          res.send({
+            message: "User was deleted successfully!",
+          });
+        } else {
+          res.send({
+            message: `Cannot delete User with id = ${id}. Maybe User was not found!`,
+          });
+        }
+      })
+      .catch((err) => {
+        res.status(500).send({
+          message: err.message || "Could not delete User with id = " + id,
+        });
+      });
+  };
+  export const update = (req, res) => {
+    const id = req.params.id;
+  
+    Customer.update(req.body, {
+      where: { id: id },
+    })
+      .then((number) => {
+        if (number == 1) {
+          res.send({
+            message: "Customer was updated successfully.",
+          });
+        } else {
+          res.status(404).send({
+            message: `Cannot update Customer with id = ${id}. Maybe Customer was not found or req.body is empty!`,
+          });
+        }
+      })
+      .catch((err) => {
+        res.status(500).send({
+          message: err.message || "Error updating User with id =" + id,
+        });
+      });
+  };
