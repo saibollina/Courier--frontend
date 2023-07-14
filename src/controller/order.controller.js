@@ -87,13 +87,39 @@ export const findAll = (req, res) => {
         model: db.customer,
         as: "orderedByCustomer",
         attributes: [
-          [Sequelize.literal('CONCAT(`orderedByCustomer`.`firstName`, " ", `orderedByCustomer`.`lastName`)'), 'OrderedBy'],
+          [Sequelize.literal('CONCAT(`orderedByCustomer`.`firstName`, " ", `orderedByCustomer`.`lastName`)'), 'name'],
+          'email',
+          'firstName',
+          'lastName'
+        ],
+      },
+      {
+        model: db.user,
+        as: "orderedByClerk",
+        attributes: [
+          [Sequelize.literal('CONCAT(`orderedByClerk`.`firstName`, " ", `orderedByClerk`.`lastName`)'), 'name'],
+        ],
+      },
+      {
+        model: db.user,
+        as: "orderAssignedTo",
+        attributes: [
+          [Sequelize.literal('CONCAT(`orderAssignedTo`.`firstName`, " ", `orderAssignedTo`.`lastName`)'), 'assignedTo'],
+          'id',
+          'email',
+          'isAvailable',
+          'firstName',
+          'lastName',
         ],
       },
     ],
     attributes: [
       'id',
       'status',
+      'receiverPhoneNumber',
+      'receiverLastName',
+      'receiverFirstName',
+      'pickedUpBy',
     ],
     where: condition })
     .then((data) => {
@@ -106,7 +132,7 @@ export const findAll = (req, res) => {
     });
 };
 
-export const estimateDeliveryCost = (req, res) => {
+export const estimateDeliveryCost = async (req, res) => {
   const dropLocation = req.query.dropLocation;
   const pickupLocation = req.query.pickupLocation;
   if (dropLocation === undefined) {
@@ -125,20 +151,193 @@ export const estimateDeliveryCost = (req, res) => {
     });
   }
 
-  res.send({cost: getEstimatedCost(pickupLocation, dropLocation)});
+  res.send({cost: await getEstimatedCost(pickupLocation, dropLocation) });
 }
 
-export const findAllOrdersAssignedToDP = (req,res) =>{
-  const id = req.params.deliveryPersonId;
-  var condition = id ? { pickedUpBy: id } : null;
+export const findAllOrdersPlacedByClerk = (req,res) =>{
+  const id = req.params.clerkId;
+  var condition = id ? { orderedBy: id } : null;
 
-  Order.findAll({ where: condition })
+  Order.findAll({
+    include: [
+      {
+        model: db.customer,
+        as: "orderedByCustomer",
+        attributes: [
+          [Sequelize.literal('CONCAT(`orderedByCustomer`.`firstName`, " ", `orderedByCustomer`.`lastName`)'), 'name'],
+          'email',
+          'firstName',
+          'lastName'
+        ],
+      },
+      {
+        model: db.user,
+        as: "orderedByClerk",
+        attributes: [
+          [Sequelize.literal('CONCAT(`orderedByClerk`.`firstName`, " ", `orderedByClerk`.`lastName`)'), 'name'],
+        ],
+      },
+      {
+        model: db.user,
+        as: "orderAssignedTo",
+        attributes: [
+          [Sequelize.literal('CONCAT(`orderAssignedTo`.`firstName`, " ", `orderAssignedTo`.`lastName`)'), 'assignedTo'],
+          'id',
+          'email',
+          'isAvailable',
+          'firstName',
+          'lastName',
+        ],
+      },
+    ],
+    attributes: [
+      'id',
+      'status',
+      'receiverPhoneNumber',
+      'receiverLastName',
+      'receiverFirstName',
+      'pickedUpBy',
+    ],
+    where: condition })
     .then((data) => {
       res.send(data);
     })
     .catch((err) => {
       res.status(500).send({
         message: err.message || "Some error occurred while retrieving orders.",
+      });
+    });
+}
+export const findAllOrdersAssignedToDP = (req,res) =>{
+  const id = req.params.deliveryPersonId;
+  var condition = id ? { pickedUpBy: parseInt(id,10) } : null;
+
+  Order.findAll({ 
+    include: [
+      {
+        model: db.customer,
+        as: "orderedByCustomer",
+        attributes: [
+          [Sequelize.literal('CONCAT(`orderedByCustomer`.`firstName`, " ", `orderedByCustomer`.`lastName`)'), 'name'],
+          'email',
+          'firstName',
+          'lastName',
+        ],
+      },
+      {
+        model: db.user,
+        as: "orderedByClerk",
+        attributes: [
+          [Sequelize.literal('CONCAT(`orderedByClerk`.`firstName`, " ", `orderedByClerk`.`lastName`)'), 'name'],
+        ],
+      },
+      {
+        model: db.user,
+        as: "orderAssignedTo",
+        attributes: [
+          [Sequelize.literal('CONCAT(`orderAssignedTo`.`firstName`, " ", `orderAssignedTo`.`lastName`)'), 'assignedTo'],
+          'id',
+          'email',
+          'isAvailable',
+          'firstName',
+          'lastName',
+        ],
+      },
+    ],
+    attributes: [
+      'id',
+      'status',
+      'receiverPhoneNumber',
+      'receiverLastName',
+      'receiverFirstName',
+      'pickedUpBy',
+    ],
+    where: condition })
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "Some error occurred while retrieving orders.",
+      });
+    });
+}
+
+export const findOne=(req,res)=>{
+  const id = req.params.id;
+  var condition = id ? { id: { [Op.like]: `%${id}%` } } : null;
+  console.log("finding one oreder", req.query.id)
+  Order.findOne({
+    include: [
+      {
+        model: db.customer,
+        as: "orderedByCustomer",
+        attributes: [
+          [Sequelize.literal('CONCAT(`orderedByCustomer`.`firstName`, " ", `orderedByCustomer`.`lastName`)'), 'name'],
+          'email',
+          'firstName',
+          'lastName'
+        ],
+      },
+      {
+        model: db.user,
+        as: "orderedByClerk",
+        attributes: [
+          [Sequelize.literal('CONCAT(`orderedByClerk`.`firstName`, " ", `orderedByClerk`.`lastName`)'), 'name'],
+        ],
+      },
+      {
+        model: db.user,
+        as: "orderAssignedTo",
+        attributes: [
+          [Sequelize.literal('CONCAT(`orderAssignedTo`.`firstName`, " ", `orderAssignedTo`.`lastName`)'), 'assignedTo'],
+          'id',
+          'email',
+          'isAvailable',
+          'firstName',
+          'lastName',
+        ],
+      },
+    ],
+    attributes: [
+      'id',
+      'status',
+      'receiverPhoneNumber',
+      'receiverLastName',
+      'receiverFirstName',
+      'pickedUpBy',
+    ],
+    where: condition })
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "Some error occurred while retrieving users.",
+      });
+    });
+}
+
+export const updateOrderDetails=(req,res)=>{
+  const id = req.params.id;
+  console.log('req==>', req.body);
+  Order.update(req.body, {
+    where: { id: id },
+  })
+    .then((number) => {
+      if (number == 1) {
+        res.send({
+          message: "Order was updated successfully.",
+        });
+      } else {
+        res.status(404).send({
+          message: `Cannot update Order with id = ${id}. Maybe Order was not found or req.body is empty!`,
+        });
+      }
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "Error updating Order with id =" + id,
       });
     });
 }

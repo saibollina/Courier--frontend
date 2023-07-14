@@ -26,7 +26,7 @@ db.user = User(sequelize,Sequelize);
 db.session = Session(sequelize,Sequelize);
 db.order  = Order(sequelize, Sequelize);
 db.customer  = Customer(sequelize, Sequelize);
-db.location  = Location(sequelize, Sequelize);
+db.location = Location(sequelize, Sequelize);
 
 
 // foreign key for session
@@ -43,7 +43,7 @@ db.session.belongsTo(
 
 db.customer.hasMany(db.order,{
     as: 'ordersPlaced',
-    foreignKey: 'coustomerID'
+    foreignKey: 'customerID'
 });
 
 db.user.hasMany(db.order,{
@@ -64,5 +64,9 @@ db.order.belongsTo(db.customer, {
 db.order.belongsTo(db.user, {
   foreignKey: 'orderedBy',
   as: 'orderedByClerk',
+});
+db.order.belongsTo(db.user, {
+  foreignKey: 'pickedUpBy',
+  as: 'orderAssignedTo',
 });
 export default db;
