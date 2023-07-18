@@ -151,7 +151,7 @@ export const estimateDeliveryCost = async (req, res) => {
     });
   }
 
-  res.send({cost: await getEstimatedCost(pickupLocation, dropLocation) });
+  res.send(await getEstimatedCost(pickupLocation, dropLocation));
 }
 
 export const findAllOrdersPlacedByClerk = (req,res) =>{
