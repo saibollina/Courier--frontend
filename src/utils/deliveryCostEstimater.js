@@ -1,7 +1,8 @@
 import db from '../models/index.js';
 const location = db.location;
 
-const COST_PER_HOP = 10;
+const COST_PER_HOP = 1.5; // in dollars
+const TIME_PER_HOP = 3; // in minutes
 
 const constructGraph = async () => {
   const graph = {};
@@ -55,5 +56,5 @@ const findShortestPath = async (source, destination) => {
 
 export const getEstimatedCost = async (pickupLocation, dropLocation) => {
   const numberOfHops = await findShortestPath(pickupLocation, dropLocation);
-  return numberOfHops * COST_PER_HOP;
+  return {totalAmount: numberOfHops * COST_PER_HOP, estimatedTime: numberOfHops * TIME_PER_HOP}
 };
