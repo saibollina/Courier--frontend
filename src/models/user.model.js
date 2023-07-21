@@ -39,7 +39,12 @@ export const User = (sequelize, Sequelize) => {
     gender:{
       type: Sequelize.STRING,
       allowNull: false,
-    }
+    },
+    phoneNumber:{
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      defaultValue: 1234567890,
+    },
   });
 
   return User;

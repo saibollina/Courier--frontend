@@ -58,3 +58,11 @@ export const getEstimatedCost = async (pickupLocation, dropLocation) => {
   const numberOfHops = await findShortestPath(pickupLocation, dropLocation);
   return {totalAmount: numberOfHops * COST_PER_HOP, estimatedTime: numberOfHops * TIME_PER_HOP}
 };
+
+export const checkDeliveredInTime = (pickUpTime, current_time, minimum_time) => {
+  const pickedupTime = new Date(pickUpTime);
+  const timeDifference = current_time - pickedupTime;
+  const minutesDifference = Math.floor(timeDifference / 1000 / 60); // Convert milliseconds to minutes
+
+  return minutesDifference <= minimum_time;
+}
