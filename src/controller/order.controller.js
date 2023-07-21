@@ -1,5 +1,5 @@
 import db from "../models/index.js";
-import {checkDeliveredInTime, getEstimatedCost} from "../utils/deliveryEstimater.js";
+import {checkDeliveredInTime, getEstimatedCost} from "../utils/deliveryCostEstimater.js";
 import Sequelize from "sequelize";
 const Order = db.order;
 const Op = db.Sequelize.Op;
