@@ -70,7 +70,8 @@ export const create = async (req, res) => {
           password: hash,
           salt: salt,
           role: req.body.role || 0,
-          gender: req.body.gender
+          gender: req.body.gender,
+          phoneNumber: req.body.phoneNumber
         };
 
         // Save User in the database

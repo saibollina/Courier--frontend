@@ -1,5 +1,5 @@
 import db from "../models/index.js";
-import {getEstimatedCost} from "../utils/deliveryCostEstimater.js";
+import {checkDeliveredInTime, getEstimatedCost} from "../utils/deliveryEstimater.js";
 import Sequelize from "sequelize";
 const Order = db.order;
 const Op = db.Sequelize.Op;
@@ -52,6 +52,11 @@ export const create = async (req, res) => {
       message: "parcelName cannot be empty for order!",
     });
   }
+  if (req.body.estimatedDeliveryTime === undefined) {
+    return res.status(400).send({
+      message: "estimatedDeliveryTime cannot be empty for order!",
+    });
+  }
   const order = {
     customerID:req.body.customerID,
     orderedBy :req.body.orderedBy,
@@ -63,7 +68,8 @@ export const create = async (req, res) => {
     receiverFirstName: req.body.receiverFirstName,
     receiverLastName: req.body.receiverLastName,
     receiverPhoneNumber: req.body.receiverPhoneNumber,
-    parcelName: req.body.parcelName
+    parcelName: req.body.parcelName,
+    estimatedDeliveryTime: req.body.estimatedDeliveryTime
   }
 
   await Order.create(order).then((data)=>{
@@ -120,6 +126,8 @@ export const findAll = (req, res) => {
       'receiverLastName',
       'receiverFirstName',
       'pickedUpBy',
+      'cost',
+      'estimatedDeliveryTime'
     ],
     where: condition })
     .then((data) => {
@@ -197,6 +205,8 @@ export const findAllOrdersPlacedByClerk = (req,res) =>{
       'receiverLastName',
       'receiverFirstName',
       'pickedUpBy',
+      'cost',
+      'estimatedDeliveryTime',
     ],
     where: condition })
     .then((data) => {
@@ -222,6 +232,7 @@ export const findAllOrdersAssignedToDP = (req,res) =>{
           'email',
           'firstName',
           'lastName',
+          'phoneNumber',
         ],
       },
       {
@@ -251,6 +262,10 @@ export const findAllOrdersAssignedToDP = (req,res) =>{
       'receiverLastName',
       'receiverFirstName',
       'pickedUpBy',
+      'pickupLocation',
+      'dropLocation',
+      'cost',
+      'estimatedDeliveryTime',
     ],
     where: condition })
     .then((data) => {
@@ -276,7 +291,8 @@ export const findOne=(req,res)=>{
           [Sequelize.literal('CONCAT(`orderedByCustomer`.`firstName`, " ", `orderedByCustomer`.`lastName`)'), 'name'],
           'email',
           'firstName',
-          'lastName'
+          'lastName',
+          'phoneNumber',
         ],
       },
       {
@@ -306,6 +322,8 @@ export const findOne=(req,res)=>{
       'receiverLastName',
       'receiverFirstName',
       'pickedUpBy',
+      'dropLocation',
+      'pickupLocation'
     ],
     where: condition })
     .then((data) => {
@@ -322,6 +340,56 @@ export const updateOrderDetails=(req,res)=>{
   const id = req.params.id;
   console.log('req==>', req.body);
   Order.update(req.body, {
+    where: { id: id },
+  })
+    .then((number) => {
+      if (number == 1) {
+        res.send({
+          message: "Order was updated successfully.",
+        });
+      } else {
+        res.status(404).send({
+          message: `Cannot update Order with id = ${id}. Maybe Order was not found or req.body is empty!`,
+        });
+      }
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "Error updating Order with id =" + id,
+      });
+    });
+}
+
+export const pickedup=(req,res)=>{
+  const id = req.params.id;
+  console.log('req==>', req.body);
+  Order.update({pickUpTime: Sequelize.literal('CURRENT_TIMESTAMP'),status:"Picked-Up"}, {
+    where: { id: id },
+  })
+    .then((number) => {
+      if (number == 1) {
+        res.send({
+          message: "Order was updated successfully.",
+        });
+      } else {
+        res.status(404).send({
+          message: `Cannot update Order with id = ${id}. Maybe Order was not found or req.body is empty!`,
+        });
+      }
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "Error updating Order with id =" + id,
+      });
+    });
+}
+
+export const delivered= async (req,res)=>{
+  const id = req.params.id;
+  const order  = await Order.findByPk(id)
+  const current_time = new Date();
+  const deliveredInTime = checkDeliveredInTime(order.pickUpTime,current_time,order.estimatedDeliveryTime)
+  Order.update({dropTime: Sequelize.literal('CURRENT_TIMESTAMP'),status:"Delivered", deliveredInTime: deliveredInTime? "Yes": "No",bonus: deliveredInTime ? order.cost*0.1 : 0}, {
     where: { id: id },
   })
     .then((number) => {

@@ -30,6 +30,11 @@ export const create = async (req, res) => {
           message: "role cannot be empty for user!",
         });
       }
+      if (req.body.address === undefined || !req.body.address) {
+        return res.status(400).send({
+          message: "address cannot be empty for user!",
+        });
+      }
     
   
     // find by email
@@ -54,7 +59,9 @@ export const create = async (req, res) => {
             lastName: req.body.lastName,
             email: req.body.email,
             role: req.body.role || 4,
-            gender: req.body.gender
+            gender: req.body.gender,
+            phoneNumber: req.body.phoneNumber,
+            address: req.body.address,
           };
   
           // Save customer in the database
@@ -80,7 +87,7 @@ export const findByEmail = (req, res) => {
     const email = req.params.email;
   
     Customer.findOne({
-      attributes: ['email', 'firstName','lastName','role','id'],
+      attributes: ['email', 'firstName','lastName','role','id','address'],
       where: {
         email: email,
       },
