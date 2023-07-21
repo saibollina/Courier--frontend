@@ -28,9 +28,9 @@ export const Customer = (sequelize, Sequelize) => {
       allowNull: false,
     },
     phoneNumber:{
-      type: Sequelize.INTEGER,
+      type: Sequelize.STRING,
       allowNull: false,
-      defaultValue: 1234567890,
+      defaultValue: "1234567890",
     },
     address:{
       type: Sequelize.STRING,
