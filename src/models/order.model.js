@@ -70,6 +70,16 @@ export const Order = (sequelize, Sequelize) => {
         len: { args: [10,10], msg: 'Phone Number is invalid' },
       }
     },
+    bonus: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+    },
+    deliveredInTime: {
+      type: Sequelize.STRING,
+      allowNull: false,
+      defaultValue: "NO",
+    }
   });
 
   return Order;
