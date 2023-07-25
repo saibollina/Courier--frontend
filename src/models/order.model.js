@@ -71,7 +71,7 @@ export const Order = (sequelize, Sequelize) => {
       }
     },
     bonus: {
-      type: Sequelize.INTEGER,
+      type: Sequelize.FLOAT,
       allowNull: false,
       defaultValue: 0,
     },
