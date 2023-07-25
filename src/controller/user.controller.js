@@ -3,7 +3,6 @@ import Sequelize from "sequelize";
 import { encrypt, getSalt, hashPassword } from "../authentication/crypto.js";
 const User = db.user;
 const Session = db.session;
-const Op = db.Sequelize.Op;
 
 // Create and Save a new User
 export const create = async (req, res) => {
@@ -20,25 +19,25 @@ export const create = async (req, res) => {
     });
   }
   if (req.body.email === undefined || !req.body.email.length) {
-   
+
     return res.status(400).send({
       message: "Email cannot be empty for user!",
     });
   }
   if (req.body.password === undefined || !req.body.password.length) {
-    
+
     return res.status(400).send({
       message: "Password cannot be empty for user!",
     });
   }
   if (req.body.gender === undefined || !req.body.gender.length) {
-   
+
     return res.status(400).send({
       message: "Gender cannot be empty for user!",
     });
   }
   if (req.body.role === undefined || !req.body.role) {
-    
+
     return res.status(400).send({
       message: "role cannot be empty for user!",
     });
@@ -122,7 +121,7 @@ export const findAll = (req, res) => {
   var condition = roleId ? { role: roleId } : null;
 
   User.findAll({
-    attributes: ['email', 'firstName','lastName','role','id',
+    attributes: ['email', 'firstName','lastName','role','id',['isAvailable','status'],
     [Sequelize.fn("concat", Sequelize.col("firstname"),' ',Sequelize.col("lastname")),'name']], 
     where: condition })
     .then((data) => {
@@ -139,8 +138,8 @@ export const findAll = (req, res) => {
 export const findOne = (req, res) => {
   const id = req.params.id;
 
-  User.findByPk(id,{
-    attributes: ['email', 'firstName','lastName','role','id']
+  User.findByPk(id, {
+    attributes: ['email', 'firstName', 'lastName', 'role', 'id',['isAvailable','active']]
   })
     .then((data) => {
       if (data) {
@@ -163,7 +162,7 @@ export const findByEmail = (req, res) => {
   const email = req.params.email;
 
   User.findOne({
-    attributes: ['email', 'firstName','lastName','role','id'],
+    attributes: ['email', 'firstName', 'lastName', 'role', 'id'],
     where: {
       email: email,
     },
@@ -186,6 +185,32 @@ export const findByEmail = (req, res) => {
 };
 
 // Update a User by the id in the request
+export const updateStatus = (req, res) => {
+  const id = req.params.id;
+  console.log("id", id)
+  console.log("status", req.body)
+  const isAvailable = req.body.status
+  User.update({isAvailable}, {
+    where: { id: id },
+  })
+    .then((number) => {
+      if (number == 1) {
+        res.send({
+          message: "User was updated successfully.",
+        });
+      } else {
+        res.status(404).send({
+          message: `Cannot update User with id = ${id}. Maybe User was not found or req.body is empty!`,
+        });
+      }
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "Error updating User with id =" + id,
+      });
+    });
+  // res.send("dfghj")
+};
 export const update = (req, res) => {
   const id = req.params.id;
 

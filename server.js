@@ -7,8 +7,9 @@ import { userRouter } from './src/routes/user.routes.js';
 import { orderRouter } from './src/routes/order.routes.js';
 import { locationRouter } from './src/routes/location.routes.js';
 import { customerRouter } from './src/routes/customer.routes.js';
+import { dashboardRouter } from './src/routes/dashboard.routes.js';
 
-db.sequelize.sync();
+db.sequelize.sync({ alter: true });
 const app = express();
 const sequelize = db.sequelize;
 const Location = db.location
@@ -121,3 +122,5 @@ app.use(userRouter);
 app.use(orderRouter);
 app.use(locationRouter);
 app.use(customerRouter);
+app.use(dashboardRouter);
+
