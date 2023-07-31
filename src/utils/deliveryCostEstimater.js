@@ -17,9 +17,10 @@ const constructGraph = async () => {
   return graph;
 };
 
-const findShortestPath = async (source, destination) => {
+export const findShortestPath = async (source, destination) => {
   const distances = {};
   const visited = {};
+  const previous = {};
   const graph = await constructGraph();
 
   Object.keys(graph).forEach((vertex) => {
@@ -48,15 +49,23 @@ const findShortestPath = async (source, destination) => {
       const distance = closestDistance + graph[closestVertex][neighbor];
       if (distance < distances[neighbor]) {
         distances[neighbor] = distance;
+        previous[neighbor] = closestVertex;
       }
     });
   }
-  return distances[destination];
+  const numberOfHops = distances[destination]
+  const path = [destination];
+  let current = destination;
+  while (current !== source) {
+    current = previous[current];
+    path.unshift(current);
+  }
+  return {numberOfHops,path};
 };
 
 export const getEstimatedCost = async (pickupLocation, dropLocation) => {
-  const numberOfHops = await findShortestPath(pickupLocation, dropLocation);
-  return {totalAmount: numberOfHops * COST_PER_HOP, estimatedTime: numberOfHops * TIME_PER_HOP}
+  const shortestPath = await findShortestPath(pickupLocation, dropLocation);
+  return {totalAmount: shortestPath.numberOfHops * COST_PER_HOP, estimatedTime: shortestPath.numberOfHops * TIME_PER_HOP}
 };
 
 export const checkDeliveredInTime = (pickUpTime, current_time, minimum_time) => {
