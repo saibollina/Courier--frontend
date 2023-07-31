@@ -9,7 +9,7 @@ import { locationRouter } from './src/routes/location.routes.js';
 import { customerRouter } from './src/routes/customer.routes.js';
 import { dashboardRouter } from './src/routes/dashboard.routes.js';
 
-db.sequelize.sync({ alter: true });
+db.sequelize.sync();
 const app = express();
 const sequelize = db.sequelize;
 const Location = db.location

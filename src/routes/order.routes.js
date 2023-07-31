@@ -1,6 +1,6 @@
 import { Router} from 'express';
 
-import { findAll, create, estimateDeliveryCost, findAllOrdersAssignedToDP,findAllOrdersPlacedByClerk, findOne, updateOrderDetails, pickedup, delivered } from "../controller/order.controller.js";
+import { findAll, create, estimateDeliveryCost, findAllOrdersAssignedToDP,findAllOrdersPlacedByClerk, findOne, updateOrderDetails, pickedup, delivered, deleteOrder } from "../controller/order.controller.js";
 
 
 export const orderRouter = Router();
@@ -17,3 +17,5 @@ orderRouter.put('/orders/:id', updateOrderDetails)
 orderRouter.get('/orders/:id', findOne);
 orderRouter.put("/orders/pickedup/:id", pickedup);
 orderRouter.put("/orders/delivered/:id", delivered);
+orderRouter.delete("/orders/:id", deleteOrder);
+

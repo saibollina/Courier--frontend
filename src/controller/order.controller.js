@@ -312,6 +312,7 @@ export const findOne=(req,res)=>{
           'isAvailable',
           'firstName',
           'lastName',
+          'phoneNumber'
         ],
       },
     ],
@@ -323,7 +324,13 @@ export const findOne=(req,res)=>{
       'receiverFirstName',
       'pickedUpBy',
       'dropLocation',
-      'pickupLocation'
+      'pickupLocation',
+      'deliveredInTime',
+      'estimatedDeliveryTime',
+      'dropTime',
+      'pickUpTime',
+      'cost',
+      'parcelName'
     ],
     where: condition })
     .then((data) => {
@@ -409,3 +416,27 @@ export const delivered= async (req,res)=>{
       });
     });
 }
+
+export const deleteOrder = (req, res) => {
+  const id = req.params.id;
+
+  Order.destroy({
+    where: { id: id },
+  })
+    .then((number) => {
+      if (number == 1) {
+        res.send({
+          message: "Order was deleted successfully!",
+        });
+      } else {
+        res.send({
+          message: `Cannot delete Order with id = ${id}. Maybe Order was not found!`,
+        });
+      }
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "Could not delete Order with id = " + id,
+      });
+    });
+};

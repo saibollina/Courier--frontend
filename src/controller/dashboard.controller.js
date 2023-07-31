@@ -43,7 +43,7 @@ export const getAdminStats = async (req, res) => {
 
     const numberOfCustomers = await Customer.count()
   
-    res.send({ ordersDeliveredCount:ordersDeliveredCount,numberOfCustomers:numberOfCustomers,usersByRole: usersByRole, orderCount: orderCount, successRate: deliveredInTimeCount * 100 / (orderCount) });
+    res.send({ ordersDeliveredCount:ordersDeliveredCount,numberOfCustomers:numberOfCustomers,usersByRole: usersByRole, orderCount: orderCount, successRate: (deliveredInTimeCount * 100) / (ordersDeliveredCount), failureRate: (notDeleiveredInTime *100)/ordersDeliveredCount });
   }
 
 export const getDeliveryPersonStats = async(req,res) =>{
@@ -64,6 +64,24 @@ export const getDeliveryPersonStats = async(req,res) =>{
       pickedUpBy: userId,
       status: {
         [Op.or]: ["Dp-assigned", "Picked-Up"]
+      }
+    }
+  })
+  const ordersInTimeDelivered = await Order.count({
+    where:{
+      pickedUpBy: userId,
+      deliveredInTime: "Yes",
+      status: {
+        [Op.or]: ["Delivered"]
+      }
+    }
+  })
+  const ordersOutTimeDelivered = await Order.count({
+    where:{
+      pickedUpBy: userId,
+      deliveredInTime: "NO",
+      status: {
+        [Op.or]: ["Delivered"]
       }
     }
   })
@@ -93,10 +111,12 @@ export const getDeliveryPersonStats = async(req,res) =>{
       dropTime: {
         [Op.between]: [sevenDaysAgo, currentDate],
       },
+      pickedUpBy: userId,
+      status: "Delivered"
     },
     group: [Sequelize.fn("date", Sequelize.col("dropTime"))],
   });
-  res.send({ordersAssigend, ordersDelivered, ordersInProgress, totalBonusEarned, pastWeekOrders})
+  res.send({ordersAssigend, ordersDelivered, ordersInProgress, totalBonusEarned, pastWeekOrders, ordersOutTimeDelivered,ordersInTimeDelivered})
 }
 export const getClerkStats = async(req,res) =>{
   const userId = req.params.id;
@@ -115,7 +135,7 @@ export const getClerkStats = async(req,res) =>{
     where:{
       orderedBy: userId,
       status: {
-        [Op.or]: ["Dp-assigned", "Picked-Up"]
+        [Op.or]: ["Dp-assigned", "Picked-Up","Order-placed"]
       }
     }
   })
